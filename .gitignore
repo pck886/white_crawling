@@ -103,3 +103,6 @@ ENV/
 # scrapy
 .scrapy
 *_visited.txt
+
+# pycharm
+.idea

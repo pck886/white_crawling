@@ -10,7 +10,7 @@ White_Crawling is an open source (GPL v2)
 
 ## Requirements
 
-* Python 3.5
+* Python 3.8
 
 ## Quick start
 
