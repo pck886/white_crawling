@@ -1,0 +1,70 @@
+version: '2'
+
+services:
+  app:
+    container_name: app-container
+    build: ./web_app
+    command:
+      - bash
+      - -c
+      - |
+        ls -al
+        dockerize -wait tcp://postgresdb:5432 -timeout 20s
+        dockerize -wait tcp://nginx:80 -timeout 20s
+        yes | python3 manage.py collectstatic --noinput
+        yes | python3 manage.py makemigrations
+        yes | python3 manage.py migrate
+        echo "from django.contrib.auth.models import User; User.objects.filter(email='admin@example.com').delete(); User.objects.create_superuser('admin', 'admin@example.com', 'cksrud10')" | python3 manage.py shell
+        uwsgi --ini .config_secret/uwsgi/deploy.ini
+        cd scrap
+        scrapy crawl scrapy_bot
+    expose:
+      - '8001'
+    ports:
+      - '8001:8001'
+    environment: # 환경변수
+      APP_DATABASE_PASSWORD : 'I l1k3 us1nG p@assphrase @nd h@ck3r sTyl3'
+    volumes: # 도커의 데이터 저장 경로 (경로를 명확하게 적어주면 local에 저장됨
+      - ./web_app:/web_app
+      - ./log:/var/log/uwsgi
+    depends_on: # db랑 존속성을 연결하기 위해 필요
+     - postgresdb
+    #entrypoint:
+    #  - /web_app/entrypoint.sh
+
+  redis:
+    container_name: 'redis'
+    image: 'redis:3.2.0'
+    ports:
+      - '127.0.0.1:6379:6379'
+    volumes:
+      - ./redisdata:/data
+
+  postgresdb:
+    container_name: postgres
+    image: postgres:9.6.1
+    restart: always
+    volumes:
+      - ./postgresdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'I l1k3 us1nG p@assphrase @nd h@ck3r sTyl3'
+      POSTGRES_INITDB_ARGS: --encoding=UTF-8
+      TZ: Asia/Seoul
+    ports:
+      - '5432:5432'
+
+  nginx:
+    container_name: nginx-container
+    build: ./nginx
+    restart: always
+    ports:
+     - "80:80"
+    volumes:
+      - ./log:/var/log/nginx
+    depends_on:
+      - app
+
+# volumes:
+  # postgresdata:
+    # external: true

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="a540a8e8-5db2-4c6d-b745-a5fc680181f5" name="white_ftp" url="http://139.59.216.24">
+        <fileTransfer host="139.59.216.24" port="22" privateKey="$USER_HOME$/.ssh/id_rsa" rootFolder="/home/chanlee/src" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

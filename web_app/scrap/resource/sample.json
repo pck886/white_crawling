@@ -1,0 +1,67 @@
+{
+	"allowed_domains" : ["theimpeter.com"],
+	"start_urls": [
+		"http://theimpeter.com/category/politics/",
+		"http://theimpeter.com/category/politics/page/2/",
+		"http://theimpeter.com/category/news/",
+		"http://theimpeter.com/category/news/page/2/",
+		"http://theimpeter.com/category/news/current/",
+		"http://theimpeter.com/category/news/current/page/2/",
+		"http://theimpeter.com/category/multimedia/",
+		"http://theimpeter.com/category/multimedia/page/2/"
+	],
+	"rules": [
+		{
+			"allow": ["/category/politics"],
+			"follow": true
+		},
+		{
+			"allow": ["/category/politics/page/\\d+.*"],
+			"follow": true
+		},
+		{
+			"allow": ["/category/news"],
+			"follow": true
+		},
+		{
+			"allow": ["/category/news/page/\\d+.*"],
+			"follow": true
+		},
+		{
+			"allow": ["/category/news/current/"],
+			"follow": true
+		},
+		{
+			"allow": ["/category/news/current/page/\\d+.*"],
+			"follow": true
+		},
+		{
+			"allow": ["/category/multimedia"],
+			"follow": true
+		},
+		{
+			"allow": ["/category/multimedia/page/\\d+.*"],
+			"follow": true
+		},
+		{
+			"allow": ["/category/politics.*"],
+			"deny": ["vote.*", "politics-why.*", "/currents.*", "/instablog.*"],
+			"restrict_xpaths": ["//div[@id='main_container']", "//div[@class='symbol_articles_list mini_category']"],
+			"follow": false,
+			"use_content": true
+		}
+
+	],
+	"paths": {
+		"article": ["//article[contains(@class, 'blog-post')]"],
+		"title": ["//div[contains(@class, 'blog-post-text-zone')]/h2/a/text()"],
+		"link": ["//div[contains(@class, 'blog-post-text-zone')]/h2/a/@href"],
+		"author": ["//div[contains(@class, 'author-info')]/a/text()"],
+        "date": ["//div[contains(@class, 'blog-post-text-zone')]/div/*[contains(@class, 'date')]/text()"],
+        "text": ["//div[contains(@class, 'blog-post-text-zone')]/p/text()"],
+		"img": ["//div[contains(@class, 'blog-post-thumbnail-zon')]/a/img/@src"]
+	},
+	"srch_list" : ["박근혜", "朴", "이명박", ",前", "김대중", "문재인", "文", "대통령", "홍준표", "트럼프", "김정은", "노무현"],
+	"source": "chanlee",
+    "company": "theimpeter"
+}
