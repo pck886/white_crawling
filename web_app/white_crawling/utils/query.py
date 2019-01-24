@@ -14,6 +14,11 @@ def item_to_model(item):
 
 def get_or_create(model):
     model_class = type(model)
+
+    print("============= MODEL_CLASS %s" % model_class)
+    print("============= MODEL %s" % model)
+    print("============= MODEL %s" % model.title)
+
     created = False
 
     # Normally, we would use `get_or_create`. However, `get_or_create` would
@@ -23,7 +28,7 @@ def get_or_create(model):
     # Instead, we do the two steps separately
     try:
         # We have no unique identifier at the moment; use the name for now.
-        obj = model_class.objects.get(name=model.name)
+        obj = model_class.objects.get(title=model.title)
     except model_class.DoesNotExist:
         created = True
         obj = model  # DjangoItem created a model for us.
@@ -36,6 +41,9 @@ def update_model(destination, source, commit=True):
 
     source_dict = model_to_dict(source)
     for (key, value) in source_dict.items():
+        print('============ KEY : %s' % key)
+        print('============ VALUE : %s' % value)
+
         setattr(destination, key, value)
 
     setattr(destination, 'pk', pk)

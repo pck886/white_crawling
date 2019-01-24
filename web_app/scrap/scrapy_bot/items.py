@@ -3,7 +3,7 @@
 from scrapy import Field
 from scrapy_djangoitem import DjangoItem
 
-from news.models import CrawlingData
+from white_crawling.news.models import CrawlingData
 
 
 class ScrapyScrapItem(DjangoItem):

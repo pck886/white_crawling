@@ -1,11 +1,12 @@
 # -*- coding:utf-8 -*-
 # Author: chanlee(pck886@gmail.com)
 
-# Import nice CrawlSpider
 import json
 import os
 import re
 
+# Import nice CrawlSpider
+from scrapy.exceptions import CloseSpider
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 from logger import logger

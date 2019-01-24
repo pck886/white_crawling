@@ -7,7 +7,8 @@ from scrapy.exporters import JsonItemExporter
 from scrapy.exceptions import DropItem
 from logger import logger
 
-from news.models import CrawlingData
+from white_crawling.news.models import CrawlingData
+from utils.query import *
 
 
 class ScrapyBotPipeline(object):
@@ -20,6 +21,9 @@ class ScrapyBotPipeline(object):
     def process_item(self, item, spider):
         try:
             valid = True
+            item_model = item_to_model(item)
+
+            obj, created = get_or_create(item_model)
 
             b_tit = next((s for s in self.srch_list if s in item['title']), None)
             b_con = next((s for s in self.srch_list if s in item['content']), None)
@@ -31,18 +35,22 @@ class ScrapyBotPipeline(object):
             else:
                 valid = False
 
-            for data in item:
-
-                item_row = CrawlingData.objects.filter(url=item['url']).first()
-
-                if item_row or (valid is False):
-                    valid = False
-                    raise DropItem("Missing %s of blogpost from %s" % (data, item['url']))
+            # for data in item:
+            #
+            #     item_row = CrawlingData.objects.filter(url=item['url']).first()
+            #
+            #     if item_row or (valid is False):
+            #         valid = False
+            #         raise DropItem("Missing %s of blogpost from %s" % (data, item['url']))
 
             if valid:
                 logger.debug('=============== SAVE ITEM URL : %s ' % item['url'])
-                item.save()
+                logger.debug('=============== obj : %s ' % obj)
+                update_model(obj, item_model)
 
+            return item
+
+        except TypeError:
             return item
 
         except Exception as e:
@@ -50,8 +58,7 @@ class ScrapyBotPipeline(object):
             if e.__str__() != '':
                 logger.info('==================== [ERROR MESSAGE] %s ' % e.__str__())
 
-            raise DropItem("Missing %s of blogpost from %s" % (data, item['url']))
-
+            raise DropItem("Missing of blogpost from %s" % ( item['url']))
 
 # ignore visited sites
 class DuplicatesPipeline(object):
